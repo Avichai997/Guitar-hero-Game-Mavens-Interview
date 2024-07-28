@@ -10,13 +10,17 @@
       {
         "splitTerminals": [
           {
-            "name": "Server",
-            "commands": ["cd server", "npm i", "npm run dev"]
-          },
-          {
-            "name": "Client",
-            "commands": ["cd client", "npm i", "npm run dev"]
+            "name": "Docker Compose",
+            "commands": ["docker compose up --build"]
           }
+          // {
+          //   "name": "Server",
+          //   "commands": ["cd server", "npm i", "npm run dev"]
+          // },
+          // {
+          //   "name": "Client",
+          //   "commands": ["cd client", "npm i", "npm run dev"]
+          // }
         ]
       }
     ]
