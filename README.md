@@ -2,42 +2,6 @@
 
 This project is a proof-of-concept web app game to test user reaction time and quick decision-making. It includes a frontend built with Vite + React + TypeScript and a backend built with Express + TypeScript.
 
-## Project Structure
-
-.
-├── client
-│ ├── index.html
-│ ├── package.json
-│ ├── package-lock.json
-│ ├── public
-│ │ └── vite.svg
-│ ├── README.md
-│ ├── src
-│ │ ├── App.scss
-│ │ ├── App.tsx
-│ │ ├── index.scss
-│ │ ├── main.tsx
-│ │ └── vite-env.d.ts
-│ ├── tsconfig.app.json
-│ ├── tsconfig.json
-│ ├── tsconfig.node.json
-│ └── vite.config.ts
-├── mavens° FS assignment.pdf
-├── README.md
-└── server
-├── nodemon.json
-├── package.json
-├── package-lock.json
-├── src
-│ ├── app.ts
-│ ├── controllers
-│ │ └── userController.ts
-│ ├── models
-│ │ └── User.ts
-│ ├── routes
-│ │ └── userRoutes.ts
-│ └── server.ts
-└── tsconfig.json
 
 ## Requirements
 
