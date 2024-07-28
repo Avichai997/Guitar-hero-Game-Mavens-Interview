@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/server.ts"
+    "dev": "nodemon src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["Mavens"],
+  "author": "Avichai Iluz",
   "license": "ISC",
   "description": "",
   "dependencies": {

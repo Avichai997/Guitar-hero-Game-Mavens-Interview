@@ -7,10 +7,12 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use('/', (_req, res, _next) => res.status(200).json('Server OK'));
+
 app.use('/api/users', userRoutes);
+app.use('/health', (_req, res) => res.status(200).json('Server OK'));
 
 const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27018/mavens';
+
 mongoose.connect(mongoUri);
 
 mongoose.connection
