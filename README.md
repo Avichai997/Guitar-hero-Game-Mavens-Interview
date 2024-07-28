@@ -2,46 +2,38 @@
 
 This project is a proof-of-concept web app game to test user reaction time and quick decision-making. It includes a frontend built with Vite + React + TypeScript and a backend built with Express + TypeScript.
 
-
 ## Requirements
 
-- Node.js (v14 or later)
-- npm (v6 or later)
-- MongoDB
+- Docker
+- Docker Compose
 
 ## Installation
 
-### Server
+### Using Docker Compose
 
-Run in new terminal:
+The easiest way to run the application is using Docker Compose. Follow these steps:
+
+1. Make sure Docker and Docker Compose are installed on your machine.
+2. Clone the repository and navigate to the project directory.
+3. Run the following command to start the services:
 
 ```bash
-cd server
-# Install the dependencies
-npm install
-# Make sure MongoDB is running. If you have MongoDB installed, you can start it with:
-mongod
-# Run the backend server:
-npm run dev
+docker-compose up --build
 ```
+
+This command will build and start the frontend, backend, and MongoDB services.
+
+## Opening the Application
+
+Once the services are running, you can access the client and server in your web browser.
 
 ### Client
 
-Run in new terminal:
-
-```bash
-cd client
-# Install the dependencies
-npm install
-# Run the frontend development server:npm run dev
-npm run dev
-```
-
-## Running the App
-
-Make sure both the backend and frontend servers are running.
-
 Open your web browser and go to [http://localhost:3000](http://localhost:3000) to access the web app.
+
+### Server
+
+The backend server runs on port 5000. You can access it at [http://localhost:5000](http://localhost:5000).
 
 ## API Endpoints
 
@@ -49,17 +41,10 @@ Open your web browser and go to [http://localhost:3000](http://localhost:3000) t
 
 - `POST /api/users` - Add a new user with their username and steps completed successfully.
 - `GET /api/users` - Get the list of users sorted by the number of steps they reached.
+- `POST /api/users/score` - Update the user's score based on their success.
 
 ## Project Details
 
 - **Frontend**: Vite + React + TypeScript
 - **Backend**: Express + TypeScript
 - **Database**: MongoDB
-
-## Contact
-
-If you have any questions, feel free to contact us.
-
----
-
-**Note**: This project is a minimal viable product (MVP) and may not include advanced features or security measures.
