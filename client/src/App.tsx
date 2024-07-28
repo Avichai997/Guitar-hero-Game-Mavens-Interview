@@ -19,6 +19,9 @@ const App = () => {
   const onFail = () => {
     setFails((prevFails) => prevFails + 1);
   };
+  const onSuccess = () => {
+    setScore((prevScore) => prevScore + 1);
+  };
 
   const handleStart = async () => {
     try {
@@ -45,7 +48,9 @@ const App = () => {
   }, [indicator]);
 
   const startInitialWaiting = useCallback(() => {
-    setMessage('');
+    setMessage(
+      'Press "a" for left side or "l"  for right to start the game 😈'
+    );
     const delay = Math.random() * 3000 + 2000;
     clearCurrentTimeout();
     timeoutRef.current = setTimeout(() => {
@@ -55,16 +60,20 @@ const App = () => {
 
   const handleKeyPress = useCallback(
     (e: KeyboardEvent) => {
+      if (!started) return;
+
+      const keysPressed = e.key === 'a' || e.key === 'l';
+
       if (!indicator) {
         setMessage('Too Soon');
         onFail();
-      } else if (indicator && (e.key === 'a' || e.key === 'l')) {
+      } else if (indicator && keysPressed) {
         if (
           (e.key === 'a' && indicator === 'left') ||
           (e.key === 'l' && indicator === 'right')
         ) {
           setMessage('Success');
-          setScore((prevScore) => prevScore + 1);
+          onSuccess();
           axios.post('/api/users/score', { username, success: true });
         } else {
           setMessage('Wrong Key');
@@ -74,7 +83,7 @@ const App = () => {
         startGame();
       }
     },
-    [indicator, startGame, username]
+    [indicator, startGame, started, username]
   );
 
   useEffect(() => {
