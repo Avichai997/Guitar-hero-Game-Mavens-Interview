@@ -1,0 +1,43 @@
+.app {
+  text-align: center;
+
+  .start-screen,
+  .game-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .waiting {
+    margin-top: 50px;
+    font-size: 24px;
+  }
+
+  .indicator {
+    width: 50px;
+    height: 50px;
+    background-color: black;
+    position: absolute;
+
+    &.left {
+      left: 10%;
+    }
+
+    &.right {
+      right: 10%;
+    }
+  }
+
+  .message {
+    margin-top: 20px;
+    font-size: 18px;
+
+    &.success {
+      color: green;
+    }
+
+    &.error {
+      color: red;
+    }
+  }
+}
