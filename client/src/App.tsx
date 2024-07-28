@@ -12,6 +12,7 @@ const App = () => {
   const [score, setScore] = useState(0);
   const [fails, setFails] = useState(0);
   const timeoutRef = useRef<number | null>(null);
+  const indicatorRef = useRef<HTMLDivElement | null>(null);
 
   const clearCurrentTimeout = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -22,7 +23,14 @@ const App = () => {
   const onSuccess = () => {
     setScore((prevScore) => prevScore + 1);
   };
-
+  const onSetIndicator = (state: 'left' | 'right' | null) => {
+    setIndicator(state);
+    if (state && indicatorRef.current) {
+      indicatorRef.current.classList.remove('wave-animation');
+      void indicatorRef.current.offsetWidth;
+      indicatorRef.current.classList.add('wave-animation');
+    }
+  };
   const handleStart = async () => {
     try {
       await axios.post('/api/users', { username });
@@ -35,12 +43,12 @@ const App = () => {
 
   const startGame = useCallback(() => {
     const side = Math.random() > 0.5 ? 'left' : 'right';
-    setIndicator(side);
+    onSetIndicator(side);
     clearCurrentTimeout();
     timeoutRef.current = setTimeout(() => {
       if (indicator) {
         setMessage('Too Late');
-        setIndicator(null);
+        onSetIndicator(null);
         onFail();
         startGame();
       }
@@ -79,7 +87,7 @@ const App = () => {
           setMessage('Wrong Key');
           onFail();
         }
-        setIndicator(null);
+        onSetIndicator(null);
         startGame();
       }
     },
@@ -92,6 +100,8 @@ const App = () => {
       window.removeEventListener('keydown', handleKeyPress);
     };
   }, [handleKeyPress]);
+
+  console.log(indicator);
 
   return (
     <div className='app'>
@@ -107,8 +117,11 @@ const App = () => {
         </div>
       ) : (
         <div className='game-screen'>
-          <div className='score'>Score: {score}</div>
-          <div className='fails'>Fails: {fails}</div>{' '}
+          <div className='scoreContainer'>
+            <div className='score'>Score: {score}</div>
+            <div className='fails'>Fails: {fails}</div>{' '}
+          </div>
+
           {message && (
             <div
               className={`message ${
@@ -118,7 +131,9 @@ const App = () => {
               {message}
             </div>
           )}
-          {indicator && <div className={`indicator ${indicator}`}></div>}
+          {indicator && (
+            <div ref={indicatorRef} className={`indicator ${indicator}`}></div>
+          )}
         </div>
       )}
     </div>
