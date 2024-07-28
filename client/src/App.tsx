@@ -12,25 +12,29 @@ const App = () => {
   const [score, setScore] = useState(0);
   const [fails, setFails] = useState(0);
   const timeoutRef = useRef<number | null>(null);
-  const indicatorRef = useRef<HTMLDivElement | null>(null);
+  const messageTimeoutRef = useRef<number | null>(null);
 
-  const clearCurrentTimeout = () => {
+  const clearCurrentTimeouts = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    if (messageTimeoutRef.current) clearTimeout(messageTimeoutRef.current);
   };
-  const onFail = () => {
+
+  const onFail = (msg: string) => {
+    setMessage(msg);
     setFails((prevFails) => prevFails + 1);
+    messageTimeoutRef.current = setTimeout(() => setMessage(''), 1000);
   };
+
   const onSuccess = () => {
+    setMessage('Success');
     setScore((prevScore) => prevScore + 1);
+    messageTimeoutRef.current = setTimeout(() => setMessage(''), 1000);
   };
+
   const onSetIndicator = (state: 'left' | 'right' | null) => {
     setIndicator(state);
-    if (state && indicatorRef.current) {
-      indicatorRef.current.classList.remove('wave-animation');
-      void indicatorRef.current.offsetWidth;
-      indicatorRef.current.classList.add('wave-animation');
-    }
   };
+
   const handleStart = async () => {
     try {
       await axios.post('/api/users', { username });
@@ -38,33 +42,26 @@ const App = () => {
       startInitialWaiting();
     } catch (error) {
       setMessage('Failed to add user');
+      messageTimeoutRef.current = setTimeout(() => setMessage(''), 1000);
     }
   };
 
-  const startGame = useCallback(() => {
-    const side = Math.random() > 0.5 ? 'left' : 'right';
-    onSetIndicator(side);
-    clearCurrentTimeout();
-    timeoutRef.current = setTimeout(() => {
-      if (indicator) {
-        setMessage('Too Late');
-        onSetIndicator(null);
-        onFail();
-        startGame();
-      }
-    }, 1000);
-  }, [indicator]);
-
   const startInitialWaiting = useCallback(() => {
-    setMessage(
-      'Press "a" for left side or "l"  for right to start the game 😈'
-    );
     const delay = Math.random() * 3000 + 2000;
-    clearCurrentTimeout();
+    clearCurrentTimeouts();
     timeoutRef.current = setTimeout(() => {
-      startGame();
+      const side = Math.random() > 0.5 ? 'left' : 'right';
+      onSetIndicator(side);
+      clearCurrentTimeouts();
+      timeoutRef.current = setTimeout(() => {
+        if (indicator) {
+          onFail('Too Late');
+          onSetIndicator(null);
+          startInitialWaiting();
+        }
+      }, 1000);
     }, delay);
-  }, [startGame]);
+  }, [indicator]);
 
   const handleKeyPress = useCallback(
     (e: KeyboardEvent) => {
@@ -73,25 +70,22 @@ const App = () => {
       const keysPressed = e.key === 'a' || e.key === 'l';
 
       if (!indicator) {
-        setMessage('Too Soon');
-        onFail();
+        onFail('Too Soon');
       } else if (indicator && keysPressed) {
         if (
           (e.key === 'a' && indicator === 'left') ||
           (e.key === 'l' && indicator === 'right')
         ) {
-          setMessage('Success');
           onSuccess();
           axios.post('/api/users/score', { username, success: true });
         } else {
-          setMessage('Wrong Key');
-          onFail();
+          onFail('Wrong Key');
         }
         onSetIndicator(null);
-        startGame();
+        startInitialWaiting();
       }
     },
-    [indicator, startGame, started, username]
+    [indicator, startInitialWaiting, started, username]
   );
 
   useEffect(() => {
@@ -119,7 +113,7 @@ const App = () => {
         <div className='game-screen'>
           <div className='scoreContainer'>
             <div className='score'>Score: {score}</div>
-            <div className='fails'>Fails: {fails}</div>{' '}
+            <div className='fails'>Fails: {fails}</div>
           </div>
 
           {message && (
@@ -131,9 +125,7 @@ const App = () => {
               {message}
             </div>
           )}
-          {indicator && (
-            <div ref={indicatorRef} className={`indicator ${indicator}`}></div>
-          )}
+          {indicator && <div className={`indicator ${indicator}`}></div>}
         </div>
       )}
     </div>
